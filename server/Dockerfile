@@ -8,7 +8,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
-FROM openjdk:21.0.5-jdk-slim
+FROM openjdk:21-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
