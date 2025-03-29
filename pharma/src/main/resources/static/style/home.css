@@ -1,22 +1,26 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 :root {
-    --primary-color: #cee5fd;
+    --primary-color: #4A90E2;
     --secondary-color: #6c757d;
-    --background-light: #f4f5f7;
-    --text-dark: #333;
+    --background-light: #f9fbfd;
+    --text-dark: #2c3e50;
     --white: #ffffff;
     --hover-color: #0056b3;
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.15);
 }
 
-/* Dark mode styles */
 @media (prefers-color-scheme: dark) {
     :root {
         --primary-color: #3a9fff;
         --secondary-color: #4a5568;
-        --background-light: #c5d5f5;
+        --background-light: #1a202c;
         --text-dark: #e2e8f0;
         --white: #2d3748;
         --hover-color: #4299e1;
+        --shadow-light: rgba(255, 255, 255, 0.1);
     }
 }
 
@@ -27,8 +31,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
     background-color: var(--background-light);
     color: var(--text-dark);
     transition: background-color 0.3s, color 0.3s;
@@ -41,12 +44,13 @@ body {
 
 .sidebar {
     width: 260px;
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), #357ABD);
     color: var(--white);
     padding: 20px;
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease;
+    box-shadow: 4px 0 10px var(--shadow-light);
+    transition: transform 0.3s ease-in-out;
 }
 
 .sidebar-toggle {
@@ -58,31 +62,26 @@ body {
     background: var(--primary-color);
     color: var(--white);
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 50%;
     cursor: pointer;
+    box-shadow: 0px 4px 8px var(--shadow-dark);
+    transition: background 0.3s;
+}
+
+.sidebar-toggle:hover {
+    background: var(--hover-color);
 }
 
 .sidebar h3 {
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sidebar h3 i {
-    margin-right: 10px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 25px;
 }
 
 .sidebar ul {
     list-style: none;
-    flex-grow: 1;
-}
-
-.sidebar ul li {
-    margin-bottom: 10px;
 }
 
 .sidebar ul li a {
@@ -91,55 +90,41 @@ body {
     display: flex;
     align-items: center;
     padding: 12px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.sidebar ul li a i {
-    margin-right: 10px;
-    width: 20px;
-    text-align: center;
+    border-radius: 8px;
+    transition: background 0.3s;
+    font-size: 16px;
 }
 
 .sidebar ul li a:hover, .sidebar ul li.active a {
     background-color: var(--hover-color);
-}
-
-.sidebar .logout-container {
-    margin-top: auto;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 8px var(--shadow-dark);
 }
 
 .content {
     flex-grow: 1;
     padding: 20px;
-    margin-left: 0px;
     transition: margin-left 0.3s ease;
 }
 
 .search-section, .filter-section {
-    background-color: var(--white);
-    border-radius: 10px;
+    background: var(--white);
+    border-radius: 12px;
     padding: 20px;
+    box-shadow: 0 4px 8px var(--shadow-light);
     margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
 }
 
-.search-section {
-    display: flex;
-    gap: 10px;
+.search-section:hover, .filter-section:hover {
+    transform: translateY(-3px);
 }
 
 select, button {
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 12px 15px;
+    border-radius: 8px;
     border: 1px solid #ddd;
     font-size: 16px;
-}
-
-select {
-    flex-grow: 1;
+    outline: none;
 }
 
 .search-btn {
@@ -147,17 +132,13 @@ select {
     color: var(--white);
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    font-weight: 500;
 }
 
 .search-btn:hover {
     background-color: var(--hover-color);
-}
-
-.filter-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    box-shadow: 0 4px 10px var(--shadow-dark);
 }
 
 .medicine-results {
@@ -167,15 +148,15 @@ select {
 }
 
 .medicine-card {
-    background-color: var(--white);
-    border-radius: 10px;
+    background: var(--white);
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
+    box-shadow: 0 4px 10px var(--shadow-light);
+    transition: transform 0.3s ease-in-out;
 }
 
 .medicine-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.02);
 }
 
 @media screen and (max-width: 1024px) {
@@ -189,7 +170,7 @@ select {
         left: -260px;
         height: 100vh;
         z-index: 1000;
-        width: 260px;
+        transition: left 0.3s;
     }
 
     .sidebar.active {
@@ -198,20 +179,6 @@ select {
 
     .sidebar-toggle {
         display: block;
-    }
-
-    .content {
-        margin-left: 0;
-        padding: 20px 10px;
-    }
-
-    .search-section, .filter-section {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .filter-section {
-        align-items: flex-start;
     }
 }
 

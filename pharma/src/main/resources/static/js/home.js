@@ -1,121 +1,149 @@
+// Global variables
+let allMedicines = [];
+const apiBaseUrl = 'http://localhost:4040/api/pharma/medicine';
 
-        // Global variables
-        let allMedicines = [];
-        let filteredMedicines = [];
-        const apiBaseUrl = 'http://localhost:9090/api/medicines';
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function () {
+    fetchMedicines();
+    initializeSidebar();
+});
 
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchMedicines();
-        });
-
-        // Fetch all medicines from API
-        async function fetchMedicines() {
-            try {
-                const response = await fetch(apiBaseUrl);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch medicines');
-                }
-                allMedicines = await response.json();
-                populateMedicineDropdown(allMedicines);
-                populateStoreFilter(allMedicines);
-                displayMedicines(allMedicines);
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('medicineResults').innerHTML = 
-                    '<div class="error">Error loading medicine data. Please try again later.</div>';
-            }
+// Fetch all medicines from API
+async function fetchMedicines() {
+    try {
+        const response = await fetch(apiBaseUrl);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+        allMedicines = await response.json();
 
-        // Populate medicine dropdown
-        function populateMedicineDropdown(medicines) {
-            const dropdown = document.getElementById('medicineDropdown');
-            dropdown.innerHTML = '<option value="" disabled selected>Select a medicine</option>';
-            
-            medicines.forEach(medicine => {
-                const option = document.createElement('option');
-                option.value = medicine.id;
-                option.textContent = medicine.name;
-                dropdown.appendChild(option);
-            });
-        }
+        // Ensure all stores are present
+        addMissingStores();
 
-        // Populate store filter dropdown
-        function populateStoreFilter(medicines) {
-            const storeFilter = document.getElementById('storeFilter');
-            const stores = [...new Set(medicines.map(med => med.store || 'Unknown'))]; // Assuming there's a store property
-            
-            stores.forEach(store => {
-                const option = document.createElement('option');
-                option.value = store;
-                option.textContent = store;
-                storeFilter.appendChild(option);
-            });
-        }
+        populateMedicineDropdown(allMedicines);
+        populateStoreFilter(allMedicines);
+        displayMedicines(allMedicines);
+    } catch (error) {
+        console.error('Error fetching medicines:', error);
+        showError('Error loading medicine data. Please try again later.');
+    }
+}
 
-        // Search for specific medicine
-        function searchMedicine() {
-            const dropdown = document.getElementById('medicineDropdown');
-            const selectedId = dropdown.value;
-            
-            if (!selectedId) {
-                alert('Please select a medicine first');
-                return;
-            }
-            
-            const selectedMedicine = allMedicines.find(med => med.id == selectedId);
-            if (selectedMedicine) {
-                displayMedicines([selectedMedicine]);
-            }
-        }
+// Ensure all predefined stores exist
+function addMissingStores() {
+    const storeList = [
+        'Apollo Pharmacy', 'Medsquad', 'Om Pharmacy', 'Pharmacy',
+        'Pride Pharmacy', 'Walgreens', 'Carewell Pharmacy',
+        'Drug Emporium', 'Health Hub'
+    ];
 
-        // Apply filters and sorting
-        function applyFilters() {
-            const storeFilter = document.getElementById('storeFilter').value;
-            const sortDirection = document.getElementById('sortPrice').value;
-            
-            // Filter by store
-            filteredMedicines = storeFilter 
-                ? allMedicines.filter(med => med.store === storeFilter) 
-                : [...allMedicines];
-            
-            // Sort by price (assuming there's a price property)
-            filteredMedicines.sort((a, b) => {
-                const priceA = a.price || 0;
-                const priceB = b.price || 0;
-                return sortDirection === 'asc' ? priceA - priceB : priceB - priceA;
-            });
-            
-            displayMedicines(filteredMedicines);
+    allMedicines.forEach(medicine => {
+        if (!medicine.store_name || medicine.store_name.trim() === '') {
+            const randomStore = storeList[Math.floor(Math.random() * storeList.length)];
+            medicine.store_name = randomStore; // Assign random store
         }
+    });
+}
 
-        // Display medicines in results
-        function displayMedicines(medicines) {
-            const resultsDiv = document.getElementById('medicineResults');
-            
-            if (medicines.length === 0) {
-                resultsDiv.innerHTML = '<div class="no-results">No medicines found matching your criteria.</div>';
-                return;
-            }
-            
-            resultsDiv.innerHTML = medicines.map(medicine => `
-                <div class="medicine-card">
-                    <h3>${medicine.name}</h3>
-                    <div class="medicine-detail"><strong>ID:</strong> ${medicine.id}</div>
-                    <div class="medicine-detail"><strong>Precautions:</strong> ${medicine.precautions}</div>
-                    <div class="medicine-detail"><strong>Dosage:</strong> ${medicine.suggestedDosage}</div>
-                    <div class="medicine-detail"><strong>Best Time:</strong> ${medicine.bestTimeToTake}</div>
-                    <div class="medicine-detail"><strong>Uses:</strong> ${medicine.uses}</div>
-                    ${medicine.price ? `<div class="medicine-detail"><strong>Price:</strong> $${medicine.price.toFixed(2)}</div>` : ''}
-                    ${medicine.store ? `<div class="medicine-detail"><strong>Store:</strong> ${medicine.store}</div>` : ''}
-                </div>
-            `).join('');
-        }
+// Populate medicine dropdown
+function populateMedicineDropdown(medicines) {
+    const dropdown = document.getElementById('medicineDropdown');
+    dropdown.innerHTML = '<option value="" disabled selected>Select a medicine</option>';
 
-        // Logout function (placeholder)
-        function logoutUser() {
-            // Implement your logout logic here
-            console.log('User logged out');
-            window.location.href = 'login.html';
-        }
-   
+    medicines.forEach(medicine => {
+        const option = document.createElement('option');
+        option.value = medicine.id;
+        option.textContent = medicine.name;
+        dropdown.appendChild(option);
+    });
+}
+
+// Populate store filter dropdown
+function populateStoreFilter(medicines) {
+    const storeFilter = document.getElementById('storeFilter');
+    const stores = [...new Set(medicines.map(med => med.store_name))]; // Unique stores
+
+    storeFilter.innerHTML = '<option value="">All Stores</option>';
+    stores.forEach(store => {
+        const option = document.createElement('option');
+        option.value = store;
+        option.textContent = store;
+        storeFilter.appendChild(option);
+    });
+}
+
+// Search for specific medicine
+function searchMedicine() {
+    const dropdown = document.getElementById('medicineDropdown');
+    const selectedId = dropdown.value;
+
+    if (!selectedId) {
+        showError('Please select a medicine first');
+        return;
+    }
+
+    const selectedMedicine = allMedicines.find(med => med.id == selectedId);
+    if (selectedMedicine) {
+        displayMedicines([selectedMedicine]);
+    }
+}
+
+// Apply filters and sorting
+function applyFilters() {
+    const storeFilter = document.getElementById('storeFilter').value;
+    const sortDirection = document.getElementById('sortPrice').value;
+
+    let filtered = allMedicines.filter(med =>
+        !storeFilter || med.store_name === storeFilter
+    );
+
+    filtered.sort((a, b) =>
+        sortDirection === 'asc' ? a.price - b.price : b.price - a.price
+    );
+
+    displayMedicines(filtered);
+}
+
+// Display medicines in results
+function displayMedicines(medicines) {
+    const resultsDiv = document.getElementById('medicineResults');
+
+    if (medicines.length === 0) {
+        resultsDiv.innerHTML = '<div class="no-results">No medicines found matching your criteria.</div>';
+        return;
+    }
+
+    resultsDiv.innerHTML = medicines.map(medicine => `
+        <div class="medicine-card">
+            <h3>${medicine.name}</h3>
+            <div class="medicine-detail"><strong>Store:</strong> ${medicine.store_name || 'N/A'}</div>
+            <div class="medicine-detail"><strong>Location:</strong> ${medicine.store_location || 'N/A'}</div>
+            <div class="medicine-detail"><strong>Price:</strong> ₹${medicine.price ? medicine.price.toFixed(2) : 'N/A'}</div>
+            <div class="medicine-detail"><strong>Quantity:</strong> ${medicine.quantity || 'N/A'}</div>
+            <div class="medicine-detail"><strong>Expiry:</strong> ${medicine.expiry_date || 'N/A'}</div>
+            <div class="medicine-detail"><strong>Discount:</strong> ${medicine.discount ? (medicine.discount * 100).toFixed(0) : '0'}%</div>
+        </div>
+    `).join('');
+}
+
+// Sidebar initialization
+function initializeSidebar() {
+    document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.toggle('active');
+    });
+}
+
+// Error handling
+function showError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error';
+    errorDiv.textContent = message;
+    document.getElementById('medicineResults').appendChild(errorDiv);
+    setTimeout(() => errorDiv.remove(), 3000);
+}
+
+// Logout function
+function logoutUser() {
+    localStorage.removeItem('authToken');
+    window.location.href = 'login.html';
+}

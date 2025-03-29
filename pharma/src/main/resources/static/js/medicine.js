@@ -1,132 +1,134 @@
+const API_BASE_URL = "http://localhost:4040/medicine";
 
-        // Global variable to store medicines data
-        let medicinesData = [];
-        
-        // Fetch all medicines when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchMedicinesForDropdown();
-        });
+// Global variable to store medicines data
+let medicinesData = [];
 
-        // Function to fetch medicines for dropdown
-        async function fetchMedicinesForDropdown() {
-            try {
-                const response = await fetch('http://localhost:9090/api/medicines');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                medicinesData = await response.json();
-                populateDropdown(medicinesData);
-            } catch (error) {
-                console.error('Error fetching medicines:', error);
-                document.getElementById('medicineDetails').innerHTML = 
-                    '<p>Error loading medicine data. Please try again later.</p>';
-            }
-        }
+document.addEventListener("DOMContentLoaded", () => {
+    fetchMedicinesForDropdown();
+});
 
-        // Populate dropdown with medicine names
-        function populateDropdown(medicines) {
-            const dropdown = document.getElementById('medicineDropdown');
-            dropdown.innerHTML = '<option value="" disabled selected>Select a medicine</option>';
-            
-            medicines.forEach(medicine => {
-                const option = document.createElement('option');
-                option.value = medicine.id;
-                option.textContent = medicine.name;
-                dropdown.appendChild(option);
-            });
-        }
+// Fetch all medicines for dropdown
+async function fetchMedicinesForDropdown() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/medicine_info`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        // Fetch details for selected medicine
-        function fetchMedicineInfo() {
-            const dropdown = document.getElementById('medicineDropdown');
-            const selectedId = dropdown.value;
-            
-            if (!selectedId) {
-                alert('Please select a medicine first');
-                return;
-            }
-            
-            const selectedMedicine = medicinesData.find(med => med.id == selectedId);
-            displayMedicineDetails(selectedMedicine);
-        }
+        medicinesData = await response.json();
+        populateDropdown(medicinesData);
+    } catch (error) {
+        console.error("Error fetching medicines:", error);
+        showErrorMessage("Error loading medicine data. Please try again later.");
+    }
+}
 
-        // Display medicine details
-        function displayMedicineDetails(medicine) {
-            const detailsDiv = document.getElementById('medicineDetails');
-            detailsDiv.innerHTML = `
-                <h3>${medicine.name}</h3>
-                <div class="medicine-detail"><strong>ID:</strong> ${medicine.id}</div>
-                <div class="medicine-detail"><strong>Precautions:</strong> ${medicine.precautions}</div>
-                <div class="medicine-detail"><strong>Suggested Dosage:</strong> ${medicine.suggestedDosage}</div>
-                <div class="medicine-detail"><strong>Best Time to Take:</strong> ${medicine.bestTimeToTake}</div>
-                <div class="medicine-detail"><strong>Uses:</strong> ${medicine.uses}</div>
-            `;
-            
-            // Hide all medicines display if it's visible
-            document.getElementById('allMedicines').style.display = 'none';
-            detailsDiv.style.display = 'block';
-        }
+// Populate dropdown with medicine names
+function populateDropdown(medicines) {
+    const dropdown = document.getElementById("medicineDropdown");
+    dropdown.innerHTML = `<option value="" disabled selected>Select a medicine</option>`;
 
-        // Fetch and display all medicines
-        async function fetchAllMedicines() {
-            try {
-                const response = await fetch('http://localhost:9090/api/medicines');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const medicines = await response.json();
-                displayAllMedicines(medicines);
-            } catch (error) {
-                console.error('Error fetching all medicines:', error);
-                document.getElementById('allMedicines').innerHTML = 
-                    '<p>Error loading medicine data. Please try again later.</p>';
-            }
-        }
+    medicines.forEach(medicine => {
+        const option = document.createElement("option");
+        option.value = medicine.id;
+        option.textContent = medicine.name;
+        dropdown.appendChild(option);
+    });
+}
 
-        // Display all medicines in a table
-        function displayAllMedicines(medicines) {
-            const allMedicinesDiv = document.getElementById('allMedicines');
-            allMedicinesDiv.innerHTML = `
-                <h3>All Medicines</h3>
-                <table border="1" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Precautions</th>
-                            <th>Dosage</th>
-                            <th>Best Time</th>
-                            <th>Uses</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${medicines.map(medicine => `
-                            <tr>
-                                <td>${medicine.id}</td>
-                                <td>${medicine.name}</td>
-                                <td>${medicine.precautions}</td>
-                                <td>${medicine.suggestedDosage}</td>
-                                <td>${medicine.bestTimeToTake}</td>
-                                <td>${medicine.uses}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            
-            // Hide single medicine display if it's visible
-            document.getElementById('medicineDetails').style.display = 'none';
-            allMedicinesDiv.style.display = 'block';
-        }
+// Fetch details for the selected medicine
+function fetchMedicineInfo() {
+    const selectedId = document.getElementById("medicineDropdown").value;
+    if (!selectedId) return alert("Please select a medicine first.");
 
-        function clearPageStack() {
-            setTimeout(() => {
-                window.history.pushState(null, null, window.location.href);
-                window.onpopstate = function () {
-                    window.history.pushState(null, null, window.location.href);
-                };
-            }, 0);
-        }
-        
-        window.onload = clearPageStack;
-   
+    const selectedMedicine = medicinesData.find(med => med.id == selectedId);
+    displayMedicineDetails(selectedMedicine);
+}
+
+// Display single medicine details
+function displayMedicineDetails(medicine) {
+    if (!medicine) {
+        showErrorMessage("Medicine details not found.");
+        return;
+    }
+
+    const detailsDiv = document.getElementById("medicineDetails");
+    detailsDiv.innerHTML = `
+        <h3>${medicine.name}</h3>
+        <div class="medicine-detail"><strong>ID:</strong> ${medicine.id}</div>
+        <div class="medicine-detail"><strong>Precautions:</strong> ${medicine.precautions}</div>
+        <div class="medicine-detail"><strong>Suggested Dosage:</strong> ${medicine.suggestedDosage}</div>
+        <div class="medicine-detail"><strong>Best Time to Take:</strong> ${medicine.bestTimeToTake}</div>
+        <div class="medicine-detail"><strong>Uses:</strong> ${medicine.uses}</div>
+    `;
+
+    document.getElementById("allMedicines").style.display = "none";
+    detailsDiv.style.display = "block";
+}
+
+// Fetch and display all medicines
+async function fetchAllMedicines() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/all_medicines`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const medicines = await response.json();
+        displayAllMedicines(medicines);
+    } catch (error) {
+        console.error("Error fetching all medicines:", error);
+        showErrorMessage("Error loading all medicines. Please try again later.");
+    }
+}
+
+// Display all medicines in a table
+function displayAllMedicines(medicines) {
+    if (!medicines.length) {
+        showErrorMessage("No medicines available.");
+        return;
+    }
+
+    const allMedicinesDiv = document.getElementById("allMedicines");
+    allMedicinesDiv.innerHTML = `
+        <h3>All Medicines</h3>
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Precautions</th>
+                    <th>Dosage</th>
+                    <th>Best Time</th>
+                    <th>Uses</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${medicines.map(medicine => `
+                    <tr>
+                        <td>${medicine.id}</td>
+                        <td>${medicine.name}</td>
+                        <td>${medicine.precautions}</td>
+                        <td>${medicine.suggestedDosage}</td>
+                        <td>${medicine.bestTimeToTake}</td>
+                        <td>${medicine.uses}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    document.getElementById("medicineDetails").style.display = "none";
+    allMedicinesDiv.style.display = "block";
+}
+
+// Show error message
+function showErrorMessage(message) {
+    document.getElementById("medicineDetails").innerHTML = `<p style="color: red;">${message}</p>`;
+}
+
+// Prevent browser back navigation
+function clearPageStack() {
+    setTimeout(() => {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = () => window.history.pushState(null, null, window.location.href);
+    }, 0);
+}
+
+window.onload = clearPageStack;
