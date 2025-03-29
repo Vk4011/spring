@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Pharma Flow</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Layout */
+        .main-container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: #007bff;
+            padding: 20px;
+            color: white;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            font-size: 18px;
+        }
+        .sidebar ul li.active {
+            background: #0056b3;
+        }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+            width: calc(100% - 260px);
+        }
+        .hidden {
+            display: none;
+        }
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .star-rating span {
+            font-size: 24px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+        .star-rating span.active {
+            color: gold;
+        }
+        /* Form */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        /* Logout Button */
+        .logout-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+    <script>
+        function clearPageStack() {
+            setTimeout(() => {
+                window.history.pushState(null, null, window.location.href);
+                window.onpopstate = function () {
+                    window.history.pushState(null, null, window.location.href);
+                };
+            }, 0);
+        }
+
+        function submitFeedback(event) {
+            event.preventDefault(); // Prevent page reload
+            document.getElementById("feedbackForm").classList.add("hidden");
+            document.getElementById("feedbackMessage").classList.remove("hidden");
+        }
+
+        function closeFeedback() {
+            document.getElementById("feedbackForm").classList.remove("hidden");
+            document.getElementById("feedbackMessage").classList.add("hidden");
+        }
+
+        function logoutUser() {
+            alert("Logging out...");
+            window.location.href = "login.html";
+        }
+
+        window.onload = function () {
+            clearPageStack();
+            setupStarRating();
+        };
+
+        function setupStarRating() {
+            document.querySelectorAll(".star-rating").forEach(rating => {
+                const stars = rating.querySelectorAll("span");
+                stars.forEach((star, index) => {
+                    star.addEventListener("click", () => {
+                        stars.forEach((s, i) => {
+                            s.classList.toggle("active", i <= index);
+                        });
+                    });
+                });
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3>Pharma Flow</h3>
+            <ul>
+                <li class="menu-item"><a href="home.html">Home</a></li>
+                <li class="menu-item"><a href="medicine_info.html">Medicine Info</a></li>
+                <li class="menu-item"><a href="history.html">History</a></li>
+                <li class="menu-item"><a href="settings.html">Settings</a></li>
+                <li class="menu-item active"><a href="feedback.html">Feedback</a></li>
+            </ul>
+            <div class="logout-container">
+                <button onclick="logoutUser()">Logout</button>
+            </div>
+        </aside>
+        
+        <!-- Feedback Form -->
+        <div class="content" id="feedbackForm">
+            <h2>Feedback</h2>
+            <form onsubmit="submitFeedback(event)">
+                <label>How often do you use our website?</label>
+                <div class="star-rating">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <label>Would you recommend us?</label>
+                <div class="star-rating">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <label>Overall satisfaction</label>
+                <div class="star-rating">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                </div>
+                <label>Additional Comments</label>
+                <textarea placeholder="Enter your comments here..."></textarea>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Thank You Message -->
+        <div class="content hidden" id="feedbackMessage">
+            <h2>Thank you for your feedback!</h2>
+            <p>We appreciate your time and will use your feedback to improve Pharma Flow.</p>
+            <button onclick="closeFeedback()">OK</button>
+        </div>
+    </div>
+</body>
+</html>

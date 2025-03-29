@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Pharma Flow</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="./style/signup.css">
+    <script src="./js/register.js" defer ></script>
+    <style>
+        /* Add loader animation */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sign Up</h2>
+        <form id="signupForm">  <!-- Changed ID for consistency -->
+            <div class="input-group">
+                <input type="email" id="email" 
+                       placeholder="Enter your email" 
+                       required
+                       autocomplete="email">
+                <div id="emailError" class="error-message"></div>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" 
+                       placeholder="Enter password (min 8 characters)" 
+                       required minlength="8"
+                       autocomplete="new-password">
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="confirm_password" 
+                       placeholder="Confirm password" 
+                       required
+                       autocomplete="new-password">
+                <div id="confirmPasswordError" class="error-message"></div>
+            </div>
+            
+            <button type="submit" id="submitBtn">Sign Up</button>
+            <div class="loader" id="loader"></div>
+        </form>
+        <div id="apiError" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <p class="login-link">Already have an account? <a href="./login.html">Login here</a></p>
+    </div>
+</body>
+</html>

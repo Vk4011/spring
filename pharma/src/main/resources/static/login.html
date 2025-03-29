@@ -1,0 +1,32 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pharma Flow</title>
+    <link rel="stylesheet" href="./style/login.css">
+    <script src="./js/login.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+
+                <input type="email" id="email" placeholder="Enter your email" required autocomplete="email">
+                <div id="emailError" class="error-message"></div>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Enter password" required
+                    autocomplete="current-password">
+                <div id="passwordError" class="error-message"></div>
+            </div>
+            <button type="submit" id="loginButton">Login</button>
+        </form>
+        <div id="apiError" class="error-message"></div>
+        <p class="signup-link">Don't have an account? <a href="./signin.html">Sign Up</a></p>
+    </div>
+</body>
+
+</html>
