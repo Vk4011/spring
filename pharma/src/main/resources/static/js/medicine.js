@@ -132,3 +132,8 @@ function clearPageStack() {
 }
 
 window.onload = clearPageStack;
+
+function logoutUser() {
+    localStorage.removeItem('authToken');
+    window.location.href = "login.html";
+}

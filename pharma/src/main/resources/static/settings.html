@@ -1,123 +1,114 @@
-<!-- settings.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Pharma Flow</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .main-container {
-            display: flex;
-            height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: #007bff;
-            padding: 20px;
-            color: white;
-            height: 100%;
-            position: fixed;
-            left: 0;
-            top: 0;
-            overflow-y: auto;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            font-size: 18px;
-        }
-        .sidebar ul li.active {
-            background: #0056b3;
-        }
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-            width: calc(100% - 260px);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-        .btn {
-            background: #007bff;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        #statusMessage {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style/medicine.css"> <!-- Using the same CSS file -->
+    <link rel="stylesheet" href="./style/settings.css">
+    
 </head>
 <body>
     <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar">
-            <h3>Pharma Flow</h3>
-            <ul>
-                <li class="menu-item"><a href="home.html">Home</a></li>
-                <li class="menu-item"><a href="medicine_info.html">Medicine Info</a></li>
-                <li class="menu-item"><a href="history.html">History</a></li>
-                <li class="menu-item active"><a href="settings.html">Settings</a></li>
-                <li class="menu-item"><a href="feedback.html">Feedback</a></li>
-                <br><br><br><br>
-                <button onclick="logoutUser()">Logout</button>
-            </ul>
-        </aside>
+        <button class="sidebar-toggle" aria-label="Toggle Navigation">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        <!-- Main Content -->
+        <aside class="sidebar">
+            <h3><i class="fas fa-capsules"></i> Pharma Flow</h3>
+            <ul>
+                <li class="menu-item"><a href="home.html"><i class="fas fa-home"></i> Home</a></li>
+                <li class="menu-item"><a href="medicine_info.html"><i class="fas fa-pills"></i> Medicine Info</a></li>
+                <li class="menu-item active"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="menu-item"><a href="feedback.html"><i class="fas fa-comment-dots"></i> Feedback</a></li>
+            </ul><br><br>  
+            <div class="logout-container">
+                <button onclick="logoutUser()" class="search-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+        
         <div class="content">
-            <h2>Change Password</h2>
-            <div class="form-group">
-                <label for="currentPassword">Current Password:</label>
-                <input type="password" id="currentPassword" placeholder="Enter current password">
-            </div>
-            <div class="form-group">
-                <label for="newPassword">New Password:</label>
-                <input type="password" id="newPassword" placeholder="Enter new password">
-            </div>
-            <div class="form-group">
-                <label for="confirmPassword">Confirm New Password:</label>
-                <input type="password" id="confirmPassword" placeholder="Confirm new password">
-            </div>
-            <button class="btn" onclick="updatePassword()">Update Password</button>
-            <p id="statusMessage"></p>
+            <h2><i class="fas fa-user-cog"></i> Account Settings</h2>
+            <br><br><br>    
+            <button style="font-size: x-large;" class="search-btn"><i class="fas fa-search"></i> Change theme</button>
+            
+            <!-- <div class="settings-form">
+                <h3><i class="fas fa-key"></i> Change Password</h3>
+                <br><br>
+                <div class="form-group">
+                    <label for="currentPassword"><i class="fas fa-lock"></i> Current Password</label>
+                    <input type="password" id="currentPassword" placeholder="Enter current password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="newPassword"><i class="fas fa-key"></i> New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword"><i class="fas fa-check-circle"></i> Confirm New Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                </div>
+                
+                <button class="btn-update" onclick="updatePassword()">
+                    <i class="fas fa-save"></i> Update Password
+                </button>
+                
+                <div id="statusMessage"></div>
+            </div> -->
         </div>
     </div>
+
     <script>
         function clearPageStack() {
-          setTimeout(() => {
-              window.history.pushState(null, null, window.location.href);
-              window.onpopstate = function () {
-                  window.history.pushState(null, null, window.location.href);
-              };
-          }, 0);
-      }
-      
-      window.onload = clearPageStack;
- 
-      
- 
-  </script>
+            setTimeout(() => {
+                window.history.pushState(null, null, window.location.href);
+                window.onpopstate = function() {
+                    window.history.pushState(null, null, window.location.href);
+                };
+            }, 0);
+        }
+        
+        function updatePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // Basic validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                statusMessage.textContent = "Please fill in all fields";
+                statusMessage.className = "error";
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                statusMessage.textContent = "New passwords don't match";
+                statusMessage.className = "error";
+                return;
+            }
+            
+            // Here you would typically make an API call to update the password
+            // For demonstration, we'll just show a success message
+            statusMessage.textContent = "Password updated successfully!";
+            statusMessage.className = "success";
+            
+            // Clear the form
+            document.getElementById('currentPassword').value = "";
+            document.getElementById('newPassword').value = "";
+            document.getElementById('confirmPassword').value = "";
+        }
+        
+        function logoutUser() {
+            // Add your logout logic here
+            window.location.href = "login.html";
+        }
+        
+        window.onload = clearPageStack;
+    </script>
+    <script src="./js/sidebar.js"></script>
 </body>
 </html>

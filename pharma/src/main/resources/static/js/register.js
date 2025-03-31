@@ -118,3 +118,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+function logoutUser() {
+    localStorage.removeItem('authToken');
+    window.location.href = "login.html";
+}
