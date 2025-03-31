@@ -1,6 +1,6 @@
 // Global variables
 let allMedicines = [];
-const apiBaseUrl = 'http://localhost:4040/api/pharma/medicine';
+const apiBaseUrl = 'https://spring-1-z6rq.onrender.com/api/pharma/medicine';
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function () {

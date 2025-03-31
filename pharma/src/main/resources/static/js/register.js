@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showLoading(true);
                 
                 // API call
-                const response = await fetch('http://localhost:4040/api/auth/signup', {
+                const response = await fetch('https://spring-1-z6rq.onrender.com/api/auth/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'

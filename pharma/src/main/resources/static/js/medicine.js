@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:4040/medicine";
+const API_BASE_URL = "https://spring-1-z6rq.onrender.com/medicine";
 
 // Global variable to store medicines data
 let medicinesData = [];

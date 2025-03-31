@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             loginButton.disabled = true;
             loginButton.innerHTML = '<div class="spinner"></div> Logging in...';
 
-            const response = await fetch('http://localhost:4040/api/auth/login', {
+            const response = await fetch('https://spring-1-z6rq.onrender.com/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
